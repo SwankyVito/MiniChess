@@ -20,7 +20,7 @@ Move Random2::get_move(State *state, int depth){
   for(int i=0;i<(int)actions.size();i++){
     State *tmp;
     tmp = state->next_state(actions[i%actions.size()]);
-    if(tmp->evaluate() > select->evaluate() || !select){
+    if(tmp->minimax_tree(*tmp,0,true,-1028,1028) > select->minimax_tree(*tmp,0,true,-1028,1028) || !select){
       select = tmp;
       target = i;
       //get the target with largest point
