@@ -3,7 +3,7 @@
 
 #include "../config.hpp"
 #include "../state/state.hpp"
-#include "../policy/random.hpp"
+#include "../policy/random2.hpp"
 
 
 State* root;

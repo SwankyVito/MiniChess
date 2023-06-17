@@ -1,7 +1,7 @@
 #include <cstdlib>
 
 #include "../state/state.hpp"
-#include "./random.hpp"
+#include "./random2.hpp"
 
 
 /**
@@ -16,5 +16,9 @@ Move Random::get_move(State *state, int depth){
     state->get_legal_actions();
   
   auto actions = state->legal_actions;
-  return actions[(rand()+depth)%actions.size()];
+  int k = depth;
+  for(int i=0;i<depth;i++){
+    k = rand()/k;
+  }
+  return actions[k%actions.size()];
 }

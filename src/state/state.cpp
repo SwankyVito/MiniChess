@@ -13,7 +13,19 @@
  */
 int State::evaluate(){
   // [TODO] design your own evaluation function
-  return 0;
+  int point = 0;
+  //"  ", "♟ ", "♜ ", "♞ ", "♝ ", "♛ ", "♚ "
+  int point_table[7] = { 0, 1, 5, 3, 3, 9, 1000};
+  for(int i=0; i<BOARD_H; i++){
+      for(int j=0; j<BOARD_W; j++){
+        int k = this->board.board[1-this->player][i][j];
+        point += (k!=0)?point_table[k]:0;
+        k = this->board.board[1-this->player][i][j];
+        point -= (k!=0)?point_table[k]:0;
+      }
+    }
+
+  return point;
 }
 
 
