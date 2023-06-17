@@ -10,8 +10,10 @@
 
 class Tree{
     public:
-        Tree(){}
+        Tree(State init,int depth): init(init), maxd(depth){}
         int minimax();
+        State init;
+        int maxd;
         std::map<std::pair<int,State>,std::vector<State>> tree;
 };
 

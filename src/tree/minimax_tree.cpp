@@ -1,5 +1,14 @@
+#include <iostream>
+#include <sstream>
+#include <cstdint>
+#include <algorithm>
+
+#include "./minimax_tree.hpp"
+#include "../state/state.hpp"
+#include "../config.hpp"
+
 /*
-void State::construct_tree(int depth){
+void Tree::construct_tree(int depth){
     max_depth = depth;
     int d = 0;
     for(auto move: this->legal_actions){
