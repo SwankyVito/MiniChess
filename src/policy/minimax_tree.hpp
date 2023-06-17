@@ -13,7 +13,6 @@ class Tree{
         Tree(){}
         int minimax();
         std::map<std::pair<int,State>,std::vector<State>> tree;
-
 };
 
 #endif
