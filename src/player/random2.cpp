@@ -7,6 +7,7 @@
 
 
 State* root;
+State* prev;
 
 /**
  * @brief Read the board from the file
@@ -28,6 +29,7 @@ void read_board(std::ifstream& fin) {
       // std::cout << std::endl;
     }
   }
+  prev = root;
   root = new State(board, player);
   root->get_legal_actions();
 }
@@ -42,7 +44,7 @@ void write_valid_spot(std::ofstream& fout) {
   // Keep updating the output until getting killed.
   while(true) {
     // Choose a random spot.
-    auto move = Random::get_move(root, 0);
+    auto move = Random2::get_move(root, 10);
     fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
     

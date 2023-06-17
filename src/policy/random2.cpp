@@ -11,14 +11,22 @@
  * @param depth You may need this for other policy
  * @return Move 
  */
-Move Random::get_move(State *state, int depth){
+Move Random2::get_move(State *state, int depth){
   if(!state->legal_actions.size())
     state->get_legal_actions();
-  
+  State *select = nullptr;
+  int target = 0;
   auto actions = state->legal_actions;
-  int k = depth;
-  for(int i=0;i<depth;i++){
-    k = rand()/k;
+  for(int i=0;i<(int)actions.size();i++){
+    State *tmp;
+    tmp = state->next_state(actions[(rand()+i)%actions.size()]);
+    if(tmp->evaluate() > select->evaluate() || !select){
+      select = tmp;
+      target = i;
+      //get the target with largest point
+    }
   }
-  return actions[k%actions.size()];
+  //temporary selections
+  return actions[(rand()+target)%actions.size()];
+  
 }

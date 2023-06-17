@@ -1,16 +1,18 @@
 #include <iostream>
 #include <sstream>
 #include <cstdint>
+#include <algorithm>
 
 #include "./state.hpp"
 #include "../config.hpp"
-
 
 /**
  * @brief evaluate the state
  * 
  * @return int 
  */
+const int MAX = 1028;
+const int MIN = -1028;
 int State::evaluate(){
   // [TODO] design your own evaluation function
   int point = 0;
@@ -28,6 +30,52 @@ int State::evaluate(){
   return point;
 }
 
+int State::minimax(int depth, int nodeIndex, bool maximizingPlayer, int values[], int alpha, int beta){
+    // Terminating condition. i.e
+    // leaf node is reached
+    if (depth == 3)
+        return values[nodeIndex];
+ 
+    if (maximizingPlayer)
+    {
+        int best = MIN;
+ 
+        // Recur for left and
+        // right children
+        for (int i = 0; i < 2; i++)
+        {
+             
+            int val = minimax(depth + 1, nodeIndex * 2 + i,
+                              false, values, alpha, beta);
+            best = std::max(best, val);
+            alpha = std::max(alpha, best);
+ 
+            // Alpha Beta Pruning
+            if (beta <= alpha)
+                break;
+        }
+        return best;
+    }
+    else
+    {
+        int best = MAX;
+ 
+        // Recur for left and
+        // right children
+        for (int i = 0; i < 2; i++)
+        {
+            int val = minimax(depth + 1, nodeIndex * 2 + i,
+                              true, values, alpha, beta);
+            best = std::min(best, val);
+            beta = std::min(beta, best);
+ 
+            // Alpha Beta Pruning
+            if (beta <= alpha)
+                break;
+        }
+        return best;
+    }
+}
 
 /**
  * @brief return next state after the move
