@@ -28,19 +28,40 @@ int State::evaluate(){
   }
   return point;
 }
+/*
 void State::construct_tree(int depth){
+    max_depth = depth;
     int d = 0;
     for(auto move: this->legal_actions){
           State *tmp = this->next_state(move);
           tmp->get_legal_actions();
           tmp->get_legal_State();
-          //tree[std::pair<d,*tmp>] = tmp->legal_states;
-      }
+          std::pair<int,State> pairing;
+          pairing.first = d; pairing.second = *tmp;
+          tree[pairing] = tmp->legal_states;
+    }
+    //暫存減少下次搜尋數
+    std::vector<State> prev=this->legal_states;
+    std::vector<State> next;
     while(d <= depth){
-      
       d++;
+      for(auto node : prev){
+        node.get_legal_actions();
+        for(auto move : node.legal_actions){
+          State *tmp = this->next_state(move);
+          tmp->get_legal_actions();
+          tmp->get_legal_State();
+          std::pair<int,State> pairing;
+          pairing.first = d; pairing.second = *tmp;
+          tree[pairing] = tmp->legal_states;
+          next.push_back(*tmp);
+        }
+      }
+      prev = next;
+      next.clear();
     }
 }
+*/
 int State::minimax(int depth, int nodeIndex, bool maximizingPlayer, std::vector<int> values, int alpha, int beta){
     // Terminating condition. i.e
     // leaf node is reached
@@ -85,6 +106,34 @@ int State::minimax(int depth, int nodeIndex, bool maximizingPlayer, std::vector<
         }
         return best;
     }
+}
+
+int State::minimax_tree(State s, int depth,bool maximizingPlayer,int alpha,int beta){
+  if(depth == max_depth){
+    return s.evaluate();
+  }
+  if(maximizingPlayer){
+    int best = MIN;
+    for(auto state: s.legal_states){
+      int val = minimax_tree(state, depth+1, false, alpha, beta);
+      best = std::max(best, val);
+      alpha = std::max(alpha, best);
+      if(beta<=alpha)
+        break;
+    }
+    return best;
+  }
+  else{
+    int best = MAX;
+    for(auto state: s.legal_states){
+      int val = minimax_tree(state, depth+1, true, alpha, beta);
+      best = std::max(best, val);
+      beta = std::max(beta, best);
+      if(beta<=alpha)
+        break;
+    }
+    return best;
+  }
 }
 
 /**
