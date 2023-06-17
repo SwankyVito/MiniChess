@@ -25,11 +25,22 @@ int State::evaluate(){
         k = this->board.board[1-this->player][i][j];
         point -= (k!=0)?point_table[k]:0;
       }
-    }
-
+  }
   return point;
 }
-
+void State::construct_tree(int depth){
+    int d = 0;
+    for(auto move: this->legal_actions){
+          State *tmp = this->next_state(move);
+          tmp->get_legal_actions();
+          tmp->get_legal_State();
+          //tree[std::pair<d,*tmp>] = tmp->legal_states;
+      }
+    while(d <= depth){
+      
+      d++;
+    }
+}
 int State::minimax(int depth, int nodeIndex, bool maximizingPlayer, std::vector<int> values, int alpha, int beta){
     // Terminating condition. i.e
     // leaf node is reached
@@ -268,6 +279,15 @@ void State::get_legal_actions(){
   }
   std::cout << "\n";
   this->legal_actions = all_actions;
+}
+
+void State::get_legal_State(){
+    std::vector<State> all_states;
+    for(auto move : legal_actions){
+        State *tmp = this->next_state(move);
+        all_states.push_back(*tmp);
+    }
+    legal_states = all_states;
 }
 
 

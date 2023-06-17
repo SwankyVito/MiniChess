@@ -19,7 +19,7 @@ Move Random2::get_move(State *state, int depth){
   auto actions = state->legal_actions;
   for(int i=0;i<(int)actions.size();i++){
     State *tmp;
-    tmp = state->next_state(actions[(rand()+i)%actions.size()]);
+    tmp = state->next_state(actions[i%actions.size()]);
     if(tmp->evaluate() > select->evaluate() || !select){
       select = tmp;
       target = i;
@@ -27,5 +27,5 @@ Move Random2::get_move(State *state, int depth){
     }
   }
   //temporary selections
-  return actions[(rand()+target)%actions.size()];
+  return actions[(target)%actions.size()];
 }

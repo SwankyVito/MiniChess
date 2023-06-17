@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <vector>
 #include <utility>
+#include <map>
+
 
 #include "../config.hpp"
 
@@ -47,7 +49,9 @@ class State{
     Board board;
     int player = 0;
     std::vector<Move> legal_actions;
-    
+    std::vector<State> legal_states;
+    std::map<std::pair<int,State>,std::vector<State>> tree;
+
     State(){};
     State(int player): player(player){};
     State(Board board): board(board){};
@@ -60,8 +64,9 @@ class State{
             std::vector<int> values, int alpha,
             int beta);
     State* next_state(Move move);
-    
     void get_legal_actions();
+    void get_legal_State();
+    void construct_tree(int depth);
     std::string encode_output();
     std::string encode_state();
 };
