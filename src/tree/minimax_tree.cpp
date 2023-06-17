@@ -8,7 +8,7 @@
 #include "../config.hpp"
 
 /*
-void Tree::construct_tree(int depth){
+void Tree::construct_tree(){
     max_depth = depth;
     int d = 0;
     for(auto move: this->legal_actions){

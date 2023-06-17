@@ -8,13 +8,18 @@
 #include "../config.hpp"
 #include "../state/state.hpp"
 
+typedef std::pair<int,State> node; 
+
 class Tree{
     public:
-        Tree(State init,int depth): init(init), maxd(depth){}
-        int minimax();
         State init;
         int maxd;
-        std::map<std::pair<int,State>,std::vector<State>> tree;
+        std::map<node,std::vector<node>> tree;
+
+        Tree(State init,int depth): init(init), maxd(depth){}
+        
+        int minimax();
+        void construct_tree();
 };
 
 #endif

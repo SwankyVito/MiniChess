@@ -7,7 +7,6 @@
 #include <utility>
 #include <map>
 
-
 #include "../config.hpp"
 
 
@@ -48,11 +47,9 @@ class State{
     GameState game_state = UNKNOWN;
     Board board;
     int player = 0;
-    int max_depth;
     std::vector<Move> legal_actions;
     std::vector<State> legal_states;
-    //std::map<std::pair<int,State>,std::vector<State>> tree;
-    //Child tree;
+    std::map<std::pair<int,State>,std::vector<State>> tree;
 
     State(){};
     State(int player): player(player){};
@@ -65,11 +62,9 @@ class State{
             bool maximizingPlayer,
             std::vector<int> values, int alpha,
             int beta);
-    int minimax_tree(State s, int depth, bool maximizingPlayer, int alpha, int beta);
     State* next_state(Move move);
     void get_legal_actions();
     void get_legal_State();
-    //void construct_tree(int depth);
     std::string encode_output();
     std::string encode_state();
 };
