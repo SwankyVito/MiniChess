@@ -57,9 +57,10 @@ class State{
     
     int minimax(int depth, int nodeIndex,
             bool maximizingPlayer,
-            int values[], int alpha,
+            std::vector<int> values, int alpha,
             int beta);
     State* next_state(Move move);
+    
     void get_legal_actions();
     std::string encode_output();
     std::string encode_state();

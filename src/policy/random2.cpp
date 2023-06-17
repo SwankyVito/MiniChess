@@ -28,5 +28,4 @@ Move Random2::get_move(State *state, int depth){
   }
   //temporary selections
   return actions[(rand()+target)%actions.size()];
-  
 }

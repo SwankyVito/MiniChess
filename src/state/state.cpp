@@ -30,12 +30,11 @@ int State::evaluate(){
   return point;
 }
 
-int State::minimax(int depth, int nodeIndex, bool maximizingPlayer, int values[], int alpha, int beta){
+int State::minimax(int depth, int nodeIndex, bool maximizingPlayer, std::vector<int> values, int alpha, int beta){
     // Terminating condition. i.e
     // leaf node is reached
-    if (depth == 3)
+    if (depth == 10)
         return values[nodeIndex];
- 
     if (maximizingPlayer)
     {
         int best = MIN;
