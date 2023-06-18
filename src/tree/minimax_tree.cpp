@@ -33,7 +33,7 @@ void Tree::construct_tree(){
 
 
 int Tree::minimax(State s,int depth,bool maximizingPlayer,int alpha,int beta){
-  if(depth = maxd)
+  if((s.game_state == WIN) || depth == maxd)
     return s.evaluate();
   node key;
   key.first = depth; key.second = s;
