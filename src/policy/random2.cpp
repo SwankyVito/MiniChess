@@ -17,8 +17,9 @@ Move Random2::get_move(State *state, int depth){
     state->get_legal_State();
   }
   auto actions = state->legal_actions;
-  Move select;
+  Move select = state->legal_actions[1];
   int point = MIN;
+  
   for(auto move : state->legal_actions){
     State *next = state->next_state(move);
     minimax cal;
@@ -28,6 +29,7 @@ Move Random2::get_move(State *state, int depth){
       point = tmp;
     }
   }
+  
   //temporary selections
   return select;
 }
