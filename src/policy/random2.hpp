@@ -1,5 +1,6 @@
 #pragma once
 #include "../state/state.hpp"
+#include "../tree/minimax_tree.hpp"
 
 
 /**
