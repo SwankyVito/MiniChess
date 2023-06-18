@@ -19,7 +19,10 @@ int State::evaluate(){
   //"  ", "♟ ", "♜ ", "♞ ", "♝ ", "♛ ", "♚ "
   if(this->game_state == WIN)
     return point = MAX;
+  if(this->game_state == DRAW)
+    return point = MAX-1;
   int point_table[7] = { 0, 1, 5, 3, 3, 9, 1000};
+
   for(int i=0; i<BOARD_H; i++){
       for(int j=0; j<BOARD_W; j++){
         int k = this->board.board[1-this->player][i][j];
