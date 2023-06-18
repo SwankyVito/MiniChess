@@ -8,34 +8,37 @@ class minimax{
     public:
     minimax(){}
     int do_minimax(State *state, int depth, bool maxplayer, int alpha, int beta){
-    if(depth == 10 || state->game_state == WIN){
-      return state->evaluate();
+        
+        if(depth == 5 || state->game_state == WIN){
+            return state->evaluate();
+        }
+        if(maxplayer){
+            int best = MIN;
+            for(auto move: state->legal_actions){
+                State *next = state->next_state(move);
+                //int val = 0;
+                int val = do_minimax(next, depth+1, false, alpha, beta);
+                best = std::max(best ,val);
+                alpha = std::max(alpha ,best);
+                if(beta<=alpha)
+                break;
+            }
+            return best;
+        }
+        else{
+            int best = MAX;
+            for(auto move: state->legal_actions){
+                State *next = state->next_state(move);
+                int val = do_minimax(next, depth+1, true, alpha, beta);
+                //int val = 0;
+                best = std::min(best ,val);
+                beta = std::min(beta ,best);
+                if(beta<=alpha)
+                break;
+            }
+            return best;
+        }
     }
-    if(maxplayer){
-      int best = MIN;
-      for(auto move: state->legal_actions){
-        State *next = state->next_state(move);
-        int val = do_minimax(next, depth+1, false, alpha, beta);
-        best = std::max(best ,val);
-        alpha = std::max(alpha ,best);
-        if(beta<=alpha)
-          break;
-      }
 
-      return best;
-    }
-    else{
-      int best = MAX;
-      for(auto move: state->legal_actions){
-        State *next = state->next_state(move);
-        int val = do_minimax(next, depth+1, true, alpha, beta);
-        best = std::min(best ,val);
-        beta = std::min(beta ,best);
-        if(beta<=alpha)
-          break;
-      }
-      return best;
-    }
-  }
 };
 #endif

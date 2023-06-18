@@ -22,12 +22,13 @@ Move Random2::get_move(State *state, int depth){
   
   for(auto move : state->legal_actions){
     State *next = state->next_state(move);
-    minimax cal;
-    int tmp = cal.do_minimax(next,1,true,MIN,MAX);
+    minimax *cal = new minimax();
+    int tmp = cal->do_minimax(next,1,true,MIN,MAX);
     if( tmp >= point){
       select = move;
       point = tmp;
     }
+    
   }
   
   //temporary selections

@@ -20,8 +20,8 @@ int State::evaluate(){
   if(this->game_state == WIN)
     return point = MAX;
   if(this->game_state == DRAW)
-    return point = MAX-1;
-  int point_table[7] = { 0, 1, 5, 3, 3, 9, 1000};
+    return point = MAX/2;
+  int point_table[7] = { 0, 1, 5, 3, 3, 9, 0};
 
   for(int i=0; i<BOARD_H; i++){
       for(int j=0; j<BOARD_W; j++){
@@ -31,6 +31,9 @@ int State::evaluate(){
         point -= (k!=0)?point_table[k]:0;
       }
   }
+
+
+
   return point;
 }
 /**
