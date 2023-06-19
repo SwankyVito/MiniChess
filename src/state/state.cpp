@@ -15,6 +15,9 @@ const int MAX = 1051;
 const int MIN = -1051;
 
 int State::evaluate() {
+    if(this->game_state == WIN) return MIN;
+    if(this->game_state == DRAW) return 0;
+    //if king being attacked -1000
     int point_table[7] = { 0, 2, 6, 7, 8, 20, 1000 };
     int score = 0;
     for (int i = 0; i < BOARD_H; i ++) {
