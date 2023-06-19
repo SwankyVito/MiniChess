@@ -2,7 +2,8 @@
 
 #include "../state/state.hpp"
 #include "./submission.hpp"
-#include "../alphabeta/alphabeta.hpp"
+//#include "../alphabeta/alphabeta.hpp"
+#include "./alphabeta_call.hpp"
 
 /**
  * @brief Randomly get a legal action
