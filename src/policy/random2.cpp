@@ -27,10 +27,9 @@ Move Random2::get_move(State *state){
     if( tmp >= point){
       select = move;
       point = tmp;
-    }
-    
+    }    
   }
-  
+
   //temporary selections
   return select;
 }

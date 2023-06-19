@@ -15,23 +15,110 @@ const int MAX = 1028;
 const int MIN = -1028;
 int State::evaluate(){
   // [TODO] design your own evaluation function
-  int point = 0;
+  int score = 0;
   //"  ", "♟ ", "♜ ", "♞ ", "♝ ", "♛ ", "♚ "
   if(this->game_state == WIN)
-    return point = MAX;
+    return MAX;
   if(this->game_state == DRAW)
-    return point = MAX-1;
+    return 0;
   int point_table[7] = { 0, 1, 5, 3, 3, 9, 0};
-  Point king;
+  int attacker[BOARD_H][BOARD_W];
   for(int i=0; i<BOARD_H; i++){
-      for(int j=0; j<BOARD_W; j++){
-        int k = this->board.board[1-this->player][i][j];
-        point += (k!=0)?point_table[k]:0;
-        k = this->board.board[this->player][i][j];
-        point -= (k!=0)?point_table[k]:0;
-      }
+    for(int j=0; j<BOARD_W; j++){
+      attacker[i][j] = 0;
+    }
   }
-  return point;
+  int being_attack = 0;
+  for(int i=0; i<BOARD_H; i++){
+    for(int j=0; j<BOARD_W; j++){
+      //King
+      if(this->board.board[1-this->player][i][j] == 6){
+        score += point_table[6];
+        //check_being attack
+        for(int i_=0; i_<BOARD_H; i_++){
+          for(int j_=0; j_<BOARD_W; j_++){
+            if(this->board.board[1-this->player][i_][j_] == 5 || this->board.board[1-this->player][i_][j_] == 2){
+              being_attack++;
+              attacker[i_][j_] = 1;
+            }
+          }
+        }
+      }
+
+      //Pawn
+      if(this->board.board[1-this->player][i][j] == 1){
+        score += point_table[1];
+        //attacking
+        if(j == 0){
+          if(this->board.board[1-this->player][i+1][j+1]){
+            score += point_table[(int)this->board.board[1-this->player][i+1][j+1]];
+            if(attacker[i][j]){
+              attacker[i][j] = 0;
+              being_attack--;
+            }
+          }
+        }
+        else if(j == 4){
+          if(this->board.board[1-this->player][i-1][j-1]){
+            score += point_table[(int)this->board.board[1-this->player][i-1][j-1]];
+            if(attacker[i][j]){
+              attacker[i][j] = 0;
+              being_attack--;
+            }
+          }
+        }
+        else{
+          int gain1 = 0,gain2 = 0;
+          if(this->board.board[1-this->player][i-1][j-1]){
+            gain1 = point_table[(int)this->board.board[1-this->player][i-1][j-1]];
+            if(attacker[i][j]){
+              attacker[i][j] = 0;
+              being_attack--;
+            }
+          } 
+          if(this->board.board[1-this->player][i+1][j+1]){
+            gain2 = point_table[(int)this->board.board[1-this->player][i+1][j+1]];
+            if(attacker[i][j]){
+              attacker[i][j] = 0;
+              being_attack--;
+            }
+          }
+          score += std::max(gain1,gain2);
+        }
+        //position
+        if(i == (1-this->player)*3+1 && !being_attack) score += (this->board.board[1-this->player][i+1][j] == 0)?9:4;
+        if(i == 3-(1-this->player)){ 
+          score += 1;
+          if(j == 2) score += 2;
+          if(j==1 || j==3) score += 1;
+        }
+        //being attack
+      }
+
+      //Rook
+      if(this->board.board[1-this->player][i][j] == 2){
+        score += point_table[2];
+      }
+
+      //Knigt
+      if(this->board.board[1-this->player][i][j] == 3){
+        score += point_table[3];
+      }
+
+      //Bishop
+      if(this->board.board[1-this->player][i][j] == 4){
+        score += point_table[4];
+      }
+
+      //Queen
+      if(this->board.board[1-this->player][i][j] == 5){
+        score += point_table[5];
+      }
+      
+    } 
+  }
+  //if(being_attack != 0) score = MIN;
+  return score;
 }
 /**
  * @brief return next state after the move
@@ -50,6 +137,7 @@ State* State::next_state(Move move){
   }
   if(next.board[1-this->player][to.first][to.second]){
     next.board[1-this->player][to.first][to.second] = 0;
+
   }
   
   next.board[this->player][from.first][from.second] = 0;
