@@ -47,6 +47,7 @@ class State{
     GameState game_state = UNKNOWN;
     Board board;
     int player = 0;
+    // white 0 black 1
     std::vector<Move> legal_actions;
     
     //extra
@@ -59,6 +60,7 @@ class State{
     State(Board board, int player): board(board), player(player){};
     
     int evaluate();
+    int evaluate2();
     
     State* next_state(Move move);
     void get_legal_actions();
