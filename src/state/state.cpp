@@ -11,10 +11,13 @@
  * 
  * @return int 
  */
-const int MAX = 121;
-const int MIN = -121;
+const int MAX = 1028;
+const int MIN = -1028;
+
+
 
 int State::evaluate2(){
+  
   int score = 0;
 
   if(this->game_state == WIN)
@@ -22,7 +25,11 @@ int State::evaluate2(){
   if(this->game_state == DRAW)
     return 0;
 
-  int point_table[7] = { 0, 1, 5, 3, 3, 9, 100};
+  int point_table[7] = { 0, 1, 5, 3, 3, 20, 100};
+  
+  //kinght move table
+  int move_x[8] = {1,1,-1,-1,2,2,-2,-2};
+  int move_y[8] = {2,-2,2,-2,1,-1,1,-1};
 
   int atk_play[BOARD_H][BOARD_W],atk_opt[BOARD_H][BOARD_W];
   int gp[BOARD_H][BOARD_W],go[BOARD_H][BOARD_W];
@@ -30,6 +37,7 @@ int State::evaluate2(){
   for(int i=0; i<BOARD_H; i++){
     for(int j=0; j<BOARD_W; j++){
       if(board.board[this->player][i][j]){
+        
         //white
         if(!this->player){
           int wp = board.board[this->player][i][j];
@@ -54,28 +62,142 @@ int State::evaluate2(){
                 atk_play[i-1][j-1] = wp; gp[i-1][j-1]++;
               }
               break;
-            case 2:
+            case 4:
               //move_table_rook_bishop[4,5,6,7][all][1&2]
-              for(int k=4;k<=7;k++){
+              //i 0~6 j 0~4 
+              for(int k=-4;k<=4;k++){
+                  int i_ = i+k;
+                  int j_ = j+k;
+                  if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
+                    if(atk_play[i_][j_] > wp)
+                      atk_play[i_][j_] = wp;
+                    gp[i_][j_]++; 
+                  }
+              }
+              break;
+            case 2:
+              //move_table_rook_bishop[0,1,2,3][all][1&2]
+              for(int k=1;k<=5;k++){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_play[i_][j] > wp)
+                      atk_play[i_][j] = wp;
+                    gp[i_][j]++;
+                    int next= board.board[this->player][i_][j];
+                    if(next) break; 
+                }
+                
+              }
+              for(int k=-1;k>=-5;k--){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_play[i_][j] > wp)
+                      atk_play[i_][j] = wp;
+                    gp[i_][j]++; 
+                    int next= board.board[this->player][i_][j];
+                    if(next) break;
+                }    
+              }
+              for(int k=1;k<=4;k++){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_play[i][j_] > wp)
+                      atk_play[i][j_] = wp;
+                    gp[i][j_]++; 
+                  int next= board.board[this->player][i][j_];
+                  if(next) break;
+                }
+              }
+              for(int k=-1;k>=-4;k--){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_play[i][j_] > wp)
+                      atk_play[i][j_] = wp;
+                    gp[i][j_]++; 
+                  int next= board.board[this->player][i][j_];
+                  if(next) break;
+                }
                 
               }
               break;
-            case 4:
-              //move_table_rook_bishop[0,1,2,3][all][1&2]
-              break;
             case 5:
               //move_table_rook_bishop all
+              //bishop part
+              for(int k=-4;k<=4;k++){
+                  int i_ = i+k;
+                  int j_ = j+k;
+                  if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
+                    if(atk_play[i_][j_] > wp)
+                      atk_play[i_][j_] = wp;
+                    gp[i_][j_]++; 
+                  }
+              }
+              //rook part
+              
+              for(int k=1;k<=5;k++){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_play[i_][j] > wp)
+                      atk_play[i_][j] = wp;
+                    gp[i_][j]++;
+                    int next= board.board[this->player][i_][j];
+                    if(next) break; 
+                }
+                
+              }
+              for(int k=-1;k>=-5;k--){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_play[i_][j] > wp)
+                      atk_play[i_][j] = wp;
+                    gp[i_][j]++; 
+                    int next= board.board[this->player][i_][j];
+                    if(next) break;
+                }    
+              }
+              for(int k=1;k<=4;k++){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_play[i][j_] > wp)
+                      atk_play[i][j_] = wp;
+                    gp[i][j_]++; 
+                  int next= board.board[this->player][i][j_];
+                  if(next) break;
+                }
+              }
+              for(int k=-1;k>=-4;k--){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_play[i][j_] > wp)
+                      atk_play[i][j_] = wp;
+                    gp[i][j_]++; 
+                  int next= board.board[this->player][i][j_];
+                  if(next) break;
+                }
+                
+              }
               break;
             case 3:
               //move_table_knight
+              
+              for(int k=0;k<8;k++){
+                int i_ = i + move_y[k];
+                int j_ = j + move_x[k];
+                if(i_>=0 && i_<=5 && j_ >=0 && j_<=4){
+                  atk_play[i_][j_] = std::min(atk_play[i_][j_],wp);
+                  gp[i_][j_]++;
+                }
+              }
               break;
             case 6:
               //move_table_king
+              
               break;
             default:
               break;
           }
         }
+        
         //black
         else {
           int bp = board.board[this->player][i][j];
@@ -99,17 +221,130 @@ int State::evaluate2(){
                 atk_play[i+1][j-1] = bp; gp[i+1][j-1]++;
               }
               break;
-            case 2:
-              //move_table_rook_bishop[4,5,6,7][all][1&2]
-              break;
             case 4:
+              //move_table_rook_bishop[4,5,6,7][all][1&2]
+              for(int k=-4;k<=4;k++){
+                  int i_ = i+k;
+                  int j_ = j+k;
+                  if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
+                    if(atk_play[i_][j_] > bp)
+                      atk_play[i_][j_] = bp;
+                    gp[i_][j_]++; 
+                  }
+              }
+              break;
+            case 2:
+              for(int k=1;k<=5;k++){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_play[i_][j] > bp)
+                      atk_play[i_][j] = bp;
+                    gp[i_][j]++; 
+                    int next= board.board[this->player][i_][j];
+                    if(next) break;
+                }
+              }
+              for(int k=-1;k>=-5;k--){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_play[i_][j] > bp)
+                      atk_play[i_][j] = bp;
+                    gp[i_][j]++;
+                    int next= board.board[this->player][i_][j];
+                    if(next) break; 
+                }
+                
+              }
+              for(int k=1;k<=4;k++){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_play[i][j_] > bp)
+                      atk_play[i][j_] = bp;
+                    gp[i][j_]++;
+                    int next= board.board[this->player][i][j_];
+                    if(next) break; 
+                }
+              }
+              for(int k=-1;k>=-4;k--){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_play[i][j_] > bp)
+                      atk_play[i][j_] = bp;
+                    gp[i][j_]++; 
+                    int next= board.board[this->player][i][j_];
+                    if(next) break;
+                }
+              }
               //move_table_rook_bishop[0,1,2,3][all][1&2]
               break;
             case 5:
               //move_table_rook_bishop all
+              //bishop part
+              for(int k=-4;k<=4;k++){
+                  int i_ = i+k;
+                  int j_ = j+k;
+                  if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
+                    if(atk_play[i_][j_] > bp)
+                      atk_play[i_][j_] = bp;
+                    gp[i_][j_]++; 
+                  }
+              }
+
+              //rook part
+              for(int k=1;k<=5;k++){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_play[i_][j] > bp)
+                      atk_play[i_][j] = bp;
+                    gp[i_][j]++; 
+                    int next= board.board[this->player][i_][j];
+                    if(next) break;
+                }
+              }
+              for(int k=-1;k>=-5;k--){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_play[i_][j] > bp)
+                      atk_play[i_][j] = bp;
+                    gp[i_][j]++;
+                    int next= board.board[this->player][i_][j];
+                    if(next) break; 
+                }
+                
+              }
+              for(int k=1;k<=4;k++){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_play[i][j_] > bp)
+                      atk_play[i][j_] = bp;
+                    gp[i][j_]++;
+                    int next= board.board[this->player][i][j_];
+                    if(next) break; 
+                }
+              }
+              for(int k=-1;k>=-4;k--){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_play[i][j_] > bp)
+                      atk_play[i][j_] = bp;
+                    gp[i][j_]++; 
+                    int next= board.board[this->player][i][j_];
+                    if(next) break;
+                }
+              }
+              
               break;
             case 3:
               //move_table_knight
+              
+              for(int k=0;k<8;k++){
+                int i_ = i + move_y[k];
+                int j_ = j + move_x[k];
+                if(i_>=0 && i_<=5 && j_ >=0 && j_<=4){
+                  atk_play[i_][j_] = std::min(atk_play[i_][j_],bp);
+                  gp[i_][j_]++;
+                }
+              }
               break;
             case 6:
               //move_table_king
@@ -143,17 +378,130 @@ int State::evaluate2(){
                 atk_opt[i-1][j-1] = wp; go[i-1][j-1]++;
               }
               break;
-            case 2:
-              //move_table_rook_bishop[4,5,6,7][all][1&2]
-              break;
             case 4:
+              //move_table_rook_bishop[4,5,6,7][all][1&2]
+              for(int k=-4;k<=4;k++){
+                  int i_ = i+k;
+                  int j_ = j+k;
+                  if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
+                    if(atk_opt[i_][j_] > wp)
+                      atk_opt[i_][j_] = wp;
+                    go[i_][j_]++; 
+                  }
+              }
+              break;
+            case 2:
               //move_table_rook_bishop[0,1,2,3][all][1&2]
+              for(int k=1;k<=5;k++){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_opt[i_][j] > wp)
+                      atk_opt[i_][j] = wp;
+                    go[i_][j]++; 
+                    int next= board.board[this->player][i_][j];
+                    if(next) break;
+                }
+              }
+              for(int k=-1;k>=-5;k--){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_opt[i_][j] > wp)
+                      atk_opt[i_][j] = wp;
+                    go[i_][j]++; 
+                    int next= board.board[this->player][i_][j];
+                    if(next) break;
+                }
+              }
+              for(int k=1;k<=4;k++){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_opt[i][j_] > wp)
+                      atk_opt[i][j_] = wp;
+                    go[i][j_]++;
+                    int next= board.board[this->player][i][j_];
+                    if(next) break; 
+                }
+              }
+              for(int k=-1;k>=-4;k--){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_opt[i][j_] > wp)
+                      atk_opt[i][j_] = wp;
+                    go[i][j_]++; 
+                    int next= board.board[this->player][i][j_];
+                    if(next) break;
+                }
+              }
+              
               break;
             case 5:
               //move_table_rook_bishop all
+
+              //bishop part
+              for(int k=-4;k<=4;k++){
+                  int i_ = i+k;
+                  int j_ = j+k;
+                  if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
+                    if(atk_opt[i_][j_] > wp)
+                      atk_opt[i_][j_] = wp;
+                    go[i_][j_]++; 
+                  }
+              }
+
+              //rook part
+              for(int k=1;k<=5;k++){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_opt[i_][j] > wp)
+                      atk_opt[i_][j] = wp;
+                    go[i_][j]++; 
+                    int next= board.board[this->player][i_][j];
+                    if(next) break;
+                }
+              }
+              for(int k=-1;k>=-5;k--){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_opt[i_][j] > wp)
+                      atk_opt[i_][j] = wp;
+                    go[i_][j]++; 
+                    int next= board.board[this->player][i_][j];
+                    if(next) break;
+                }
+              }
+              for(int k=1;k<=4;k++){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_opt[i][j_] > wp)
+                      atk_opt[i][j_] = wp;
+                    go[i][j_]++;
+                    int next= board.board[this->player][i][j_];
+                    if(next) break; 
+                }
+              }
+              for(int k=-1;k>=-4;k--){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_opt[i][j_] > wp)
+                      atk_opt[i][j_] = wp;
+                    go[i][j_]++; 
+                    int next= board.board[this->player][i][j_];
+                    if(next) break;
+                }
+              }
+
               break;
             case 3:
               //move_table_knight
+              
+              for(int k=0;k<8;k++){
+                int i_ = i + move_y[k];
+                int j_ = j + move_x[k];
+                if(i_>=0 && i_<=5 && j_ >=0 && j_<=4){
+                  atk_opt[i_][j_] = std::min(atk_play[i_][j_],wp);
+                  go[i_][j_]++;
+                }
+              }
               break;
             case 6:
               //move_table_king
@@ -162,6 +510,7 @@ int State::evaluate2(){
               break;
           }
         }
+
         //black
         else {
           int bp = board.board[1-this->player][i][j];
@@ -185,17 +534,128 @@ int State::evaluate2(){
                 atk_opt[i+1][j-1] = bp; go[i+1][j-1]++;
               }
               break;
-            case 2:
-              //move_table_rook_bishop[4,5,6,7][all][1&2]
-              break;
             case 4:
+              //move_table_rook_bishop[4,5,6,7][all][1&2]
+              for(int k=-4;k<=4;k++){
+                  int i_ = i+k;
+                  int j_ = j+k;
+                  if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
+                    if(atk_opt[i_][j_] > bp)
+                      atk_opt[i_][j_] = bp;
+                    go[i_][j_]++; 
+                  }
+              }
+              break;
+            case 2:
               //move_table_rook_bishop[0,1,2,3][all][1&2]
+              for(int k=1;k<=5;k++){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_opt[i_][j] > bp)
+                      atk_opt[i_][j] = bp;
+                    go[i_][j]++; 
+                    int next= board.board[this->player][i_][j];
+                    if(next) break;
+                }
+              }
+              for(int k=-1;k>=-5;k--){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_opt[i_][j] > bp)
+                      atk_opt[i_][j] = bp;
+                    go[i_][j]++;
+                    int next= board.board[this->player][i_][j];
+                    if(next) break; 
+                }
+              }
+              for(int k=1;k<=4;k++){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_opt[i][j_] > bp)
+                      atk_opt[i][j_] = bp;
+                    go[i][j_]++; 
+                    int next= board.board[this->player][i][j_];
+                    if(next) break;
+                }
+              }
+              for(int k=-1;k>=-4;k--){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_opt[i][j_] > bp)
+                      atk_opt[i][j_] = bp;
+                    go[i][j_]++; 
+                    int next= board.board[this->player][i][j_];
+                    if(next) break;
+                }
+              }
+              
               break;
             case 5:
               //move_table_rook_bishop all
+              //bishop part
+              for(int k=-4;k<=4;k++){
+                  int i_ = i+k;
+                  int j_ = j+k;
+                  if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
+                    if(atk_opt[i_][j_] > bp)
+                      atk_opt[i_][j_] = bp;
+                    go[i_][j_]++; 
+                  }
+              }
+              //rook part
+              
+              for(int k=1;k<=5;k++){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_opt[i_][j] > bp)
+                      atk_opt[i_][j] = bp;
+                    go[i_][j]++; 
+                    int next= board.board[this->player][i_][j];
+                    if(next) break;
+                }
+              }
+              for(int k=-1;k>=-5;k--){
+                int i_ = i+k;
+                if(i_>=0 && i_<=5){
+                  if(atk_opt[i_][j] > bp)
+                      atk_opt[i_][j] = bp;
+                    go[i_][j]++;
+                    int next= board.board[this->player][i_][j];
+                    if(next) break; 
+                }
+              }
+              for(int k=1;k<=4;k++){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_opt[i][j_] > bp)
+                      atk_opt[i][j_] = bp;
+                    go[i][j_]++; 
+                    int next= board.board[this->player][i][j_];
+                    if(next) break;
+                }
+              }
+              for(int k=-1;k>=-4;k--){
+                int j_ = j+k;
+                if(j_>=0 && j_<=4){
+                  if(atk_opt[i][j_] > bp)
+                      atk_opt[i][j_] = bp;
+                    go[i][j_]++; 
+                    int next= board.board[this->player][i][j_];
+                    if(next) break;
+                }
+              }
+              
               break;
             case 3:
               //move_table_knight
+              for(int k=0;k<8;k++){
+                int i_ = i + move_y[k];
+                int j_ = j + move_x[k];
+                if(i_>=0 && i_<=5 && j_ >=0 && j_<=4){
+                  atk_opt[i_][j_] = std::min(atk_play[i_][j_],bp);
+                  go[i_][j_]++;
+                }
+              }
               break;
             case 6:
               //move_table_king
@@ -211,6 +671,7 @@ int State::evaluate2(){
   //compare atk_play atk_opt gp go
   int get = 0;
   int lose = 0;
+  
   for(int i=0; i<BOARD_H; i++){
     for(int j=0; j<BOARD_W; j++){
       int gain = board.board[1-this->player][i][j];
@@ -218,6 +679,7 @@ int State::evaluate2(){
       if(atk_play[i][j] && gain){
         if(atk_opt[i][j]){
           int cal = gain - atk_play[i][j];
+          if(cal<0) continue;
           get = std::max(cal,get);
         }
         else{
@@ -227,6 +689,7 @@ int State::evaluate2(){
       if(atk_opt[i][j] && got){
         if(atk_play[i][j]){
           int cal = got - atk_opt[i][j];
+          if(cal<0) continue;
           lose = std::max(cal,lose);
         }
         else{
@@ -235,7 +698,24 @@ int State::evaluate2(){
       }
     }
   }
-  score += get - lose;
+
+  //king safty
+  for(int i=0; i<BOARD_H; i++){
+    for(int j=0; j<BOARD_W; j++){
+      if(board.board[this->player][i][j] == 6 && atk_opt[i][j]!=0){
+        //score = MIN;
+        return MIN;
+      }
+      else if(board.board[this->player][i][j] == 6){
+        if(i == 5 && this->player == 0) score+=10;
+        else if(this->player == 0) score -=10;
+        if(i == 0 && this->player == 1) score+=10;
+        else if(this->player == 1) score -=10;
+      }
+    }
+  }
+
+  score += (get - 2*lose);
   return score;
 }
 /**
@@ -268,7 +748,6 @@ State* State::next_state(Move move){
   return next_state;
 }
 
-
 static const int move_table_rook_bishop[8][7][2] = {
   {{0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6}, {0, 7}},
   {{0, -1}, {0, -2}, {0, -3}, {0, -4}, {0, -5}, {0, -6}, {0, -7}},
@@ -289,6 +768,7 @@ static const int move_table_king[8][2] = {
   {1, 0}, {0, 1}, {-1, 0}, {0, -1}, 
   {1, 1}, {1, -1}, {-1, 1}, {-1, -1},
 };
+
 
 
 /**
