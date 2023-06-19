@@ -48,12 +48,12 @@ int State::evaluate2(){
               // move_table_rook_bishop[6][0][1&2] move_table_rook_bishop[7][0][1&2]
               //check where is it
               if(j == 0) { 
-                if(atk_play[i-1][j+1] > wp)
+                if(point_table[atk_opt[i-1][j+1]] > point_table[wp])
                   atk_play[i-1][j+1] = wp; 
                 gp[i-1][j+1]++; 
               }
               else if(j == 4) { 
-                if(atk_play[i-1][j-1] > wp)
+                if(point_table[atk_play[i-1][j-1]] > point_table[wp])
                   atk_play[i-1][j-1] = wp; 
                 gp[i-1][j-1]++; 
               }
@@ -69,7 +69,7 @@ int State::evaluate2(){
                   int i_ = i+k;
                   int j_ = j+k;
                   if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
-                    if(atk_play[i_][j_] > wp)
+                    if(point_table[atk_play[i_][j_]] > point_table[wp])
                       atk_play[i_][j_] = wp;
                     gp[i_][j_]++; 
                   }
@@ -80,7 +80,7 @@ int State::evaluate2(){
               for(int k=1;k<=5;k++){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_play[i_][j] > wp)
+                  if(point_table[atk_play[i_][j]] > point_table[wp])
                       atk_play[i_][j] = wp;
                     gp[i_][j]++;
                     int next= board.board[this->player][i_][j];
@@ -91,7 +91,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-5;k--){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_play[i_][j] > wp)
+                  if(point_table[atk_play[i_][j]] > point_table[wp])
                       atk_play[i_][j] = wp;
                     gp[i_][j]++; 
                     int next= board.board[this->player][i_][j];
@@ -101,7 +101,7 @@ int State::evaluate2(){
               for(int k=1;k<=4;k++){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_play[i][j_] > wp)
+                  if(point_table[atk_play[i][j_]] > point_table[wp])
                       atk_play[i][j_] = wp;
                     gp[i][j_]++; 
                   int next= board.board[this->player][i][j_];
@@ -111,7 +111,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-4;k--){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_play[i][j_] > wp)
+                  if(point_table[atk_play[i][j_]] > point_table[wp])
                       atk_play[i][j_] = wp;
                     gp[i][j_]++; 
                   int next= board.board[this->player][i][j_];
@@ -127,7 +127,7 @@ int State::evaluate2(){
                   int i_ = i+k;
                   int j_ = j+k;
                   if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
-                    if(atk_play[i_][j_] > wp)
+                    if(point_table[atk_play[i_][j_]] > point_table[wp])
                       atk_play[i_][j_] = wp;
                     gp[i_][j_]++; 
                   }
@@ -137,7 +137,7 @@ int State::evaluate2(){
               for(int k=1;k<=5;k++){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_play[i_][j] > wp)
+                  if(point_table[atk_play[i_][j]] > point_table[wp])
                       atk_play[i_][j] = wp;
                     gp[i_][j]++;
                     int next= board.board[this->player][i_][j];
@@ -148,7 +148,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-5;k--){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_play[i_][j] > wp)
+                  if(point_table[atk_play[i_][j]] > point_table[wp])
                       atk_play[i_][j] = wp;
                     gp[i_][j]++; 
                     int next= board.board[this->player][i_][j];
@@ -158,7 +158,7 @@ int State::evaluate2(){
               for(int k=1;k<=4;k++){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_play[i][j_] > wp)
+                  if(point_table[atk_play[i][j_]] > point_table[wp])
                       atk_play[i][j_] = wp;
                     gp[i][j_]++; 
                   int next= board.board[this->player][i][j_];
@@ -168,7 +168,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-4;k--){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_play[i][j_] > wp)
+                  if(point_table[atk_play[i][j_]] > point_table[wp])
                       atk_play[i][j_] = wp;
                     gp[i][j_]++; 
                   int next= board.board[this->player][i][j_];
@@ -184,7 +184,8 @@ int State::evaluate2(){
                 int i_ = i + move_y[k];
                 int j_ = j + move_x[k];
                 if(i_>=0 && i_<=5 && j_ >=0 && j_<=4){
-                  atk_play[i_][j_] = std::min(atk_play[i_][j_],wp);
+                  if(point_table[atk_play[i_][j_]] > point_table[wp])
+                    atk_play[i_][j_] = wp;
                   gp[i_][j_]++;
                 }
               }
@@ -207,12 +208,12 @@ int State::evaluate2(){
             case 1:
               // move_table_rook_bishop[6][0][1&2] move_table_rook_bishop[7][0][1&2]
               if(j == 0) { 
-                if(atk_play[i+1][j+1] > bp)
+                if(point_table[atk_play[i+1][j+1]] > point_table[bp])
                   atk_play[i+1][j+1] = bp; 
                 gp[i+1][j+1]++; 
               }
               else if(j == 4) { 
-                if(atk_play[i+1][j-1] > bp)
+                if(point_table[atk_play[i+1][j-1]] > point_table[bp])
                   atk_play[i+1][j-1] = bp; 
                 gp[i+1][j-1]++; 
               }
@@ -227,7 +228,7 @@ int State::evaluate2(){
                   int i_ = i+k;
                   int j_ = j+k;
                   if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
-                    if(atk_play[i_][j_] > bp)
+                    if(point_table[atk_play[i_][j_]] > point_table[bp])
                       atk_play[i_][j_] = bp;
                     gp[i_][j_]++; 
                   }
@@ -237,7 +238,7 @@ int State::evaluate2(){
               for(int k=1;k<=5;k++){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_play[i_][j] > bp)
+                  if(point_table[atk_play[i_][j]] > point_table[bp])
                       atk_play[i_][j] = bp;
                     gp[i_][j]++; 
                     int next= board.board[this->player][i_][j];
@@ -247,7 +248,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-5;k--){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_play[i_][j] > bp)
+                  if(point_table[atk_play[i_][j]] > point_table[bp])
                       atk_play[i_][j] = bp;
                     gp[i_][j]++;
                     int next= board.board[this->player][i_][j];
@@ -258,7 +259,7 @@ int State::evaluate2(){
               for(int k=1;k<=4;k++){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_play[i][j_] > bp)
+                  if(point_table[atk_play[i][j_]] > point_table[bp])
                       atk_play[i][j_] = bp;
                     gp[i][j_]++;
                     int next= board.board[this->player][i][j_];
@@ -268,7 +269,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-4;k--){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_play[i][j_] > bp)
+                  if(point_table[atk_play[i][j_]] > point_table[bp])
                       atk_play[i][j_] = bp;
                     gp[i][j_]++; 
                     int next= board.board[this->player][i][j_];
@@ -284,7 +285,7 @@ int State::evaluate2(){
                   int i_ = i+k;
                   int j_ = j+k;
                   if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
-                    if(atk_play[i_][j_] > bp)
+                    if(point_table[atk_play[i_][j_]] > point_table[bp])
                       atk_play[i_][j_] = bp;
                     gp[i_][j_]++; 
                   }
@@ -294,7 +295,7 @@ int State::evaluate2(){
               for(int k=1;k<=5;k++){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_play[i_][j] > bp)
+                  if(point_table[atk_play[i_][j]] > point_table[bp])
                       atk_play[i_][j] = bp;
                     gp[i_][j]++; 
                     int next= board.board[this->player][i_][j];
@@ -304,7 +305,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-5;k--){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_play[i_][j] > bp)
+                  if(point_table[atk_play[i_][j]] > point_table[bp])
                       atk_play[i_][j] = bp;
                     gp[i_][j]++;
                     int next= board.board[this->player][i_][j];
@@ -315,7 +316,7 @@ int State::evaluate2(){
               for(int k=1;k<=4;k++){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_play[i][j_] > bp)
+                  if(point_table[atk_play[i][j_]] > point_table[bp])
                       atk_play[i][j_] = bp;
                     gp[i][j_]++;
                     int next= board.board[this->player][i][j_];
@@ -325,7 +326,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-4;k--){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_play[i][j_] > bp)
+                  if(point_table[atk_play[i][j_]] > point_table[bp])
                       atk_play[i][j_] = bp;
                     gp[i][j_]++; 
                     int next= board.board[this->player][i][j_];
@@ -341,7 +342,8 @@ int State::evaluate2(){
                 int i_ = i + move_y[k];
                 int j_ = j + move_x[k];
                 if(i_>=0 && i_<=5 && j_ >=0 && j_<=4){
-                  atk_play[i_][j_] = std::min(atk_play[i_][j_],bp);
+                  if(point_table[atk_play[i_][j_]] > point_table[bp])
+                    atk_play[i_][j_]  = bp;
                   gp[i_][j_]++;
                 }
               }
@@ -364,12 +366,12 @@ int State::evaluate2(){
             case 1:
               // move_table_rook_bishop[6][0][1&2] move_table_rook_bishop[7][0][1&2]
               if(j == 0) { 
-                if(atk_opt[i-1][j+1] > wp)
+                if(point_table[atk_opt[i-1][j+1]] > point_table[wp])
                   atk_opt[i-1][j+1] = wp; 
                 go[i-1][j+1]++; 
               }
               else if(j == 4) { 
-                if(atk_opt[i-1][j-1] > wp)
+                if(point_table[atk_opt[i-1][j-1]] > point_table[wp])
                   atk_opt[i-1][j-1] = wp; 
                 go[i-1][j-1]++; 
               }
@@ -384,7 +386,7 @@ int State::evaluate2(){
                   int i_ = i+k;
                   int j_ = j+k;
                   if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
-                    if(atk_opt[i_][j_] > wp)
+                    if(point_table[atk_opt[i_][j_]] > point_table[wp])
                       atk_opt[i_][j_] = wp;
                     go[i_][j_]++; 
                   }
@@ -395,7 +397,7 @@ int State::evaluate2(){
               for(int k=1;k<=5;k++){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_opt[i_][j] > wp)
+                  if(point_table[atk_opt[i_][j]] > point_table[wp])
                       atk_opt[i_][j] = wp;
                     go[i_][j]++; 
                     int next= board.board[this->player][i_][j];
@@ -405,7 +407,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-5;k--){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_opt[i_][j] > wp)
+                  if(point_table[atk_opt[i_][j]] > point_table[wp])
                       atk_opt[i_][j] = wp;
                     go[i_][j]++; 
                     int next= board.board[this->player][i_][j];
@@ -415,7 +417,7 @@ int State::evaluate2(){
               for(int k=1;k<=4;k++){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_opt[i][j_] > wp)
+                  if(point_table[atk_opt[i][j_]] > point_table[wp])
                       atk_opt[i][j_] = wp;
                     go[i][j_]++;
                     int next= board.board[this->player][i][j_];
@@ -425,7 +427,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-4;k--){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_opt[i][j_] > wp)
+                  if(point_table[atk_opt[i][j_]] > point_table[wp])
                       atk_opt[i][j_] = wp;
                     go[i][j_]++; 
                     int next= board.board[this->player][i][j_];
@@ -442,7 +444,7 @@ int State::evaluate2(){
                   int i_ = i+k;
                   int j_ = j+k;
                   if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
-                    if(atk_opt[i_][j_] > wp)
+                    if(point_table[atk_opt[i_][j_]] > point_table[wp])
                       atk_opt[i_][j_] = wp;
                     go[i_][j_]++; 
                   }
@@ -452,7 +454,7 @@ int State::evaluate2(){
               for(int k=1;k<=5;k++){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_opt[i_][j] > wp)
+                  if(point_table[atk_opt[i_][j]] > point_table[wp])
                       atk_opt[i_][j] = wp;
                     go[i_][j]++; 
                     int next= board.board[this->player][i_][j];
@@ -462,7 +464,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-5;k--){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_opt[i_][j] > wp)
+                  if(point_table[atk_opt[i_][j]] > point_table[wp])
                       atk_opt[i_][j] = wp;
                     go[i_][j]++; 
                     int next= board.board[this->player][i_][j];
@@ -472,7 +474,7 @@ int State::evaluate2(){
               for(int k=1;k<=4;k++){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_opt[i][j_] > wp)
+                  if(point_table[atk_opt[i][j_]] > point_table[wp])
                       atk_opt[i][j_] = wp;
                     go[i][j_]++;
                     int next= board.board[this->player][i][j_];
@@ -482,7 +484,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-4;k--){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_opt[i][j_] > wp)
+                  if(point_table[atk_opt[i][j_]] > point_table[wp])
                       atk_opt[i][j_] = wp;
                     go[i][j_]++; 
                     int next= board.board[this->player][i][j_];
@@ -498,7 +500,8 @@ int State::evaluate2(){
                 int i_ = i + move_y[k];
                 int j_ = j + move_x[k];
                 if(i_>=0 && i_<=5 && j_ >=0 && j_<=4){
-                  atk_opt[i_][j_] = std::min(atk_play[i_][j_],wp);
+                  if(point_table[atk_opt[i_][j_]] > point_table[wp])
+                      atk_opt[i_][j_] = wp;
                   go[i_][j_]++;
                 }
               }
@@ -520,12 +523,12 @@ int State::evaluate2(){
             case 1:
               // move_table_rook_bishop[6][0][1&2] move_table_rook_bishop[7][0][1&2]
               if(j == 0) { 
-                if(atk_opt[i+1][j+1] > bp)
+                if(point_table[atk_opt[i+1][j+1]] > point_table[bp])
                   atk_opt[i+1][j+1] = bp; 
                 go[i+1][j+1]++; 
               }
               else if(j == 4) { 
-                if(atk_opt[i+1][j-1] > bp)
+                if(point_table[atk_opt[i+1][j-1]] > point_table[bp])
                   atk_opt[i+1][j-1] = bp; 
                 go[i+1][j-1]++; 
               }
@@ -540,7 +543,7 @@ int State::evaluate2(){
                   int i_ = i+k;
                   int j_ = j+k;
                   if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
-                    if(atk_opt[i_][j_] > bp)
+                    if(point_table[atk_opt[i_][j_]] > point_table[bp])
                       atk_opt[i_][j_] = bp;
                     go[i_][j_]++; 
                   }
@@ -551,7 +554,7 @@ int State::evaluate2(){
               for(int k=1;k<=5;k++){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_opt[i_][j] > bp)
+                  if(point_table[atk_opt[i_][j]] > point_table[bp])
                       atk_opt[i_][j] = bp;
                     go[i_][j]++; 
                     int next= board.board[this->player][i_][j];
@@ -561,7 +564,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-5;k--){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_opt[i_][j] > bp)
+                  if(point_table[atk_opt[i_][j]] > point_table[bp])
                       atk_opt[i_][j] = bp;
                     go[i_][j]++;
                     int next= board.board[this->player][i_][j];
@@ -571,7 +574,7 @@ int State::evaluate2(){
               for(int k=1;k<=4;k++){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_opt[i][j_] > bp)
+                  if(point_table[atk_opt[i][j_]] > point_table[bp])
                       atk_opt[i][j_] = bp;
                     go[i][j_]++; 
                     int next= board.board[this->player][i][j_];
@@ -581,7 +584,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-4;k--){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_opt[i][j_] > bp)
+                  if(point_table[atk_opt[i][j_]] > point_table[bp])
                       atk_opt[i][j_] = bp;
                     go[i][j_]++; 
                     int next= board.board[this->player][i][j_];
@@ -597,7 +600,7 @@ int State::evaluate2(){
                   int i_ = i+k;
                   int j_ = j+k;
                   if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
-                    if(atk_opt[i_][j_] > bp)
+                    if(point_table[atk_opt[i_][j_]] > point_table[bp])
                       atk_opt[i_][j_] = bp;
                     go[i_][j_]++; 
                   }
@@ -607,7 +610,7 @@ int State::evaluate2(){
               for(int k=1;k<=5;k++){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_opt[i_][j] > bp)
+                  if(point_table[atk_opt[i_][j]] > point_table[bp])
                       atk_opt[i_][j] = bp;
                     go[i_][j]++; 
                     int next= board.board[this->player][i_][j];
@@ -617,7 +620,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-5;k--){
                 int i_ = i+k;
                 if(i_>=0 && i_<=5){
-                  if(atk_opt[i_][j] > bp)
+                  if(point_table[atk_opt[i_][j]] > point_table[bp])
                       atk_opt[i_][j] = bp;
                     go[i_][j]++;
                     int next= board.board[this->player][i_][j];
@@ -627,7 +630,7 @@ int State::evaluate2(){
               for(int k=1;k<=4;k++){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_opt[i][j_] > bp)
+                  if(point_table[atk_opt[i][j_]] > point_table[bp])
                       atk_opt[i][j_] = bp;
                     go[i][j_]++; 
                     int next= board.board[this->player][i][j_];
@@ -637,7 +640,7 @@ int State::evaluate2(){
               for(int k=-1;k>=-4;k--){
                 int j_ = j+k;
                 if(j_>=0 && j_<=4){
-                  if(atk_opt[i][j_] > bp)
+                  if(point_table[atk_opt[i][j_]] > point_table[bp])
                       atk_opt[i][j_] = bp;
                     go[i][j_]++; 
                     int next= board.board[this->player][i][j_];
@@ -652,7 +655,7 @@ int State::evaluate2(){
                 int i_ = i + move_y[k];
                 int j_ = j + move_x[k];
                 if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
-                    if(atk_opt[i_][j_] > bp)
+                    if(point_table[atk_opt[i_][j_]] > point_table[bp])
                       atk_opt[i_][j_] = bp;
                     go[i_][j_]++; 
                 }    
@@ -679,28 +682,29 @@ int State::evaluate2(){
       int got = board.board[this->player][i][j];
       if(atk_play[i][j] && gain){
         if(atk_opt[i][j]){
-          int cal = gain - atk_play[i][j];
+          int cal = point_table[gain] - point_table[atk_play[i][j]];
           if(cal<0) continue;
           get = std::max(cal,get);
         }
         else{
-          get = std::max(gain,get);
+          get = std::max(point_table[gain],get);
         }
       }
       if(atk_opt[i][j] && got){
         if(atk_play[i][j]){
-          int cal = got - atk_opt[i][j];
+          int cal = point_table[got] - point_table[atk_opt[i][j]];
           if(cal<0) continue;
           lose = std::max(cal,lose);
         }
         else{
-          lose = std::max(lose,got);
+          lose = std::max(lose,point_table[got]);
         }
       }
     }
   }
-
+  
   //king safty
+  /*
   for(int i=0; i<BOARD_H; i++){
     for(int j=0; j<BOARD_W; j++){
       if(board.board[this->player][i][j] == 6 && atk_opt[i][j] == 0){
@@ -717,8 +721,8 @@ int State::evaluate2(){
       }
     }
   }
-
-  score += (get - 2*lose);
+  */
+  score += (get - lose);
   return score;
 }
 /**
