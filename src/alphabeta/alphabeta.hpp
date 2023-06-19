@@ -1,22 +1,22 @@
-#ifndef __MINIMAX_H__
-#define __MINIMAX_H__
+#ifndef __alphabeta_H__
+#define __alphabeta_H__
 #include "../state/state.hpp"
 
-const int MAX = 40;
-const int MIN = -40;
-class minimax{
+const int MAX = 1051;
+const int MIN = -1051;
+class alphabeta{
     public:
-    minimax(){}
-    int do_minimax(State *state, int depth, bool maxplayer, int alpha, int beta){
-        if(depth == 1 || state->game_state == WIN){
-            return state->evaluate2();
+    alphabeta(){}
+    int do_alphabeta(State *state, int depth, bool maxplayer, int alpha, int beta){
+        if(depth == 0 || state->game_state == WIN){
+            return state->evaluate();
         }
         if(maxplayer){
             int best = MIN;
             for(auto move: state->legal_actions){
                 State *next = state->next_state(move);
                 //int val = 0;
-                int val = do_minimax(next, depth+1, false, alpha, beta);
+                int val = do_alphabeta(next, depth-1, false, alpha, beta);
                 best = std::max(best ,val);
                 alpha = std::max(alpha ,best);
                 if(beta<=alpha)
@@ -28,7 +28,7 @@ class minimax{
             int best = MAX;
             for(auto move: state->legal_actions){
                 State *next = state->next_state(move);
-                int val = do_minimax(next, depth+1, true, alpha, beta);
+                int val = do_alphabeta(next, depth-1, true, alpha, beta);
                 //int val = 0;
                 best = std::min(best ,val);
                 beta = std::min(beta ,best);

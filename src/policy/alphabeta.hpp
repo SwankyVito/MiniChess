@@ -1,6 +1,6 @@
 #pragma once
 #include "../state/state.hpp"
-#include "../minimax/minimax.hpp"
+#include "../alphabeta/alphabeta.hpp"
 
 /*
  * @brief Policy class for random policy, 
@@ -8,7 +8,7 @@
  */
 class Random2{
 public:
-  static Move get_move(State *state);
+  static Move get_move(State *state,int depth);
   int max_depth;
   
 };
