@@ -93,6 +93,30 @@ int State::evaluate(){
           if(j==1 || j==3) score += 1;
         }
         //being attack
+        if(j == 0){
+          if(this->board.board[1-this->player][i+1][j+1]){
+            score += point_table[(int)this->board.board[1-this->player][i+1][j+1]];
+            if(attacker[i][j]){
+              attacker[i][j] = 0;
+              being_attack--;
+            }
+          }
+        }
+        else if(j == 4){
+          if(this->board.board[1-this->player][i-1][j-1]){
+            score -= point_table[(int)this->board.board[1-this->player][i-1][j-1]];
+          }
+        }
+        else{
+          int lose1 = 0,lose2 = 0;
+          if(this->board.board[1-this->player][i-1][j-1]){
+            lose1 = point_table[(int)this->board.board[1-this->player][i-1][j-1]];
+          } 
+          if(this->board.board[1-this->player][i+1][j+1]){
+            lose2 = point_table[(int)this->board.board[1-this->player][i+1][j+1]];
+          }
+          score -= std::max(lose1,lose2);
+        }
       }
 
       //Rook
@@ -117,7 +141,7 @@ int State::evaluate(){
       
     } 
   }
-  //if(being_attack != 0) score = MIN;
+  //if(being_attack != 0) score = 0;
   return score;
 }
 /**

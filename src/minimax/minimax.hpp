@@ -9,7 +9,7 @@ class minimax{
     minimax(){}
     int do_minimax(State *state, int depth, bool maxplayer, int alpha, int beta){
         
-        if(depth == 3 || state->game_state == WIN){
+        if(depth == 4 || state->game_state == WIN){
             return state->evaluate();
         }
         if(maxplayer){
