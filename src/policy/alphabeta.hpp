@@ -1,7 +1,6 @@
 #pragma once
 #include "../state/state.hpp"
-#include "../alphabeta/alphabeta.hpp"
-
+#include "./alphabeta_call.hpp"
 /*
  * @brief Policy class for random policy, 
  * your policy class should have get_move method

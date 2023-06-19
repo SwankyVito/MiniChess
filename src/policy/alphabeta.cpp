@@ -1,7 +1,7 @@
 #include <cstdlib>
 
 #include "../state/state.hpp"
-#include "./submission.hpp"
+#include "./alphabeta.hpp"
 //#include "../alphabeta/alphabeta.hpp"
 #include "./alphabeta_call.hpp"
 
