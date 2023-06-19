@@ -209,15 +209,33 @@ int State::evaluate2(){
   }
 
   //compare atk_play atk_opt gp go
+  int get = 0;
+  int lose = 0;
   for(int i=0; i<BOARD_H; i++){
     for(int j=0; j<BOARD_W; j++){
-      int get = 0;
       int gain = board.board[1-this->player][i][j];
+      int got = board.board[this->player][i][j];
       if(atk_play[i][j] && gain){
-        
+        if(atk_opt[i][j]){
+          int cal = gain - atk_play[i][j];
+          get = std::max(cal,get);
+        }
+        else{
+          get = std::max(gain,get);
+        }
+      }
+      if(atk_opt[i][j] && got){
+        if(atk_play[i][j]){
+          int cal = got - atk_opt[i][j];
+          lose = std::max(cal,lose);
+        }
+        else{
+          lose = std::max(lose,got);
+        }
       }
     }
   }
+  score += get - lose;
   return score;
 }
 /**
