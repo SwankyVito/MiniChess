@@ -11,27 +11,345 @@
  * 
  * @return int 
  */
-const int MAX = 1028;
-const int MIN = -1028;
+const int MAX = 61;
+const int MIN = -61;
 int State::evaluate(){
   // [TODO] design your own evaluation function
-  int point = 0;
+  int score = 0;
   //"  ", "♟ ", "♜ ", "♞ ", "♝ ", "♛ ", "♚ "
   if(this->game_state == WIN)
-    return point = MAX;
+    return MAX;
   if(this->game_state == DRAW)
-    return point = MAX-1;
-  int point_table[7] = { 0, 1, 5, 3, 3, 9, 1000};
+    return MAX-1;
+  int point_table[7] = { 0, 1, 5, 3, 3, 9, 0};
+  int attacker[BOARD_H][BOARD_W];
+  for(int i=0; i<BOARD_H; i++){
+    for(int j=0; j<BOARD_W; j++){
+      attacker[i][j] = 0;
+    }
+  }
+  int being_attack = 0;
+  for(int i=0; i<BOARD_H; i++){
+    for(int j=0; j<BOARD_W; j++){
+      //King
+      if(this->board.board[1-this->player][i][j] == 6){
+        score += point_table[6];
+        //check_being attack
+        for(int i_=0; i_<BOARD_H; i_++){
+          for(int j_=0; j_<BOARD_W; j_++){
+            if(this->board.board[1-this->player][i_][j_] == 5 || this->board.board[1-this->player][i_][j_] == 2){
+              being_attack++;
+              attacker[i_][j_] = 1;
+            }
+          }
+        }
+      }
+
+      //Pawn
+      if(this->board.board[1-this->player][i][j] == 1){
+        score += point_table[1];
+        //attacking
+        if(j == 0){
+          if(this->board.board[1-this->player][i+1][j+1]){
+            score += point_table[(int)this->board.board[1-this->player][i+1][j+1]];
+            if(attacker[i][j]){
+              attacker[i][j] = 0;
+              being_attack--;
+            }
+          }
+        }
+        else if(j == 4){
+          if(this->board.board[1-this->player][i-1][j-1]){
+            score += point_table[(int)this->board.board[1-this->player][i-1][j-1]];
+            if(attacker[i][j]){
+              attacker[i][j] = 0;
+              being_attack--;
+            }
+          }
+        }
+        else{
+          int gain1 = 0,gain2 = 0;
+          if(this->board.board[1-this->player][i-1][j-1]){
+            gain1 = point_table[(int)this->board.board[1-this->player][i-1][j-1]];
+            if(attacker[i][j]){
+              attacker[i][j] = 0;
+              being_attack--;
+            }
+          } 
+          if(this->board.board[1-this->player][i+1][j+1]){
+            gain2 = point_table[(int)this->board.board[1-this->player][i+1][j+1]];
+            if(attacker[i][j]){
+              attacker[i][j] = 0;
+              being_attack--;
+            }
+          }
+          score += std::max(gain1,gain2);
+        }
+        //asending
+        if(i == (1-this->player)*3+1 && !being_attack) score += (this->board.board[1-this->player][i+1][j] == 0)?9:4;
+        //position
+        if(i == 3-(1-this->player)){ 
+          score += 1;
+          if(j == 2) score += 2;
+          if(j==1 || j==3) score += 1;
+        }
+        //being attack
+        if(j == 0){
+          if(this->board.board[1-this->player][i+1][j+1]){
+            score += point_table[(int)this->board.board[1-this->player][i+1][j+1]];
+            if(attacker[i][j]){
+              attacker[i][j] = 0;
+              being_attack--;
+            }
+          }
+        }
+        else if(j == 4){
+          if(this->board.board[1-this->player][i-1][j-1]){
+            score -= point_table[(int)this->board.board[1-this->player][i-1][j-1]];
+          }
+        }
+        else{
+          int lose1 = 0,lose2 = 0;
+          if(this->board.board[1-this->player][i-1][j-1]){
+            lose1 = point_table[(int)this->board.board[1-this->player][i-1][j-1]];
+          } 
+          if(this->board.board[1-this->player][i+1][j+1]){
+            lose2 = point_table[(int)this->board.board[1-this->player][i+1][j+1]];
+          }
+          score -= std::max(lose1,lose2);
+        }
+      }
+
+      //Rook
+      if(this->board.board[1-this->player][i][j] == 2){
+        score += point_table[2];
+        //attacking
+        //being attack
+      }
+
+      //Knigt
+      if(this->board.board[1-this->player][i][j] == 3){
+        score += point_table[3];
+        //attacking
+        //being attack
+      }
+
+      //Bishop
+      if(this->board.board[1-this->player][i][j] == 4){
+        score += point_table[4];
+        //attacking
+        //being attack
+      }
+
+      //Queen
+      if(this->board.board[1-this->player][i][j] == 5){
+        score += point_table[5];
+        //attacking
+        //being attack
+      }
+      
+    } 
+  }
+  //if(being_attack != 0) score = MIN;
+  return score;
+}
+
+int State::evaluate2(){
+  int score = 0;
+
+  if(this->game_state == WIN)
+    return MAX;
+  if(this->game_state == DRAW)
+    return 0;
+
+  int point_table[7] = { 0, 1, 5, 3, 3, 9, 100};
+
+  int atk_play[BOARD_H][BOARD_W],atk_opt[BOARD_H][BOARD_W];
+  int gp[BOARD_H][BOARD_W],go[BOARD_H][BOARD_W];
 
   for(int i=0; i<BOARD_H; i++){
-      for(int j=0; j<BOARD_W; j++){
-        int k = this->board.board[1-this->player][i][j];
-        point += (k!=0)?point_table[k]:0;
-        k = this->board.board[1-this->player][i][j];
-        point -= (k!=0)?point_table[k]:0;
+    for(int j=0; j<BOARD_W; j++){
+      if(board.board[this->player][i][j]){
+        //white
+        if(!this->player){
+          int wp = board.board[this->player][i][j];
+          score += point_table[wp];
+          switch (wp)
+          {
+            case 1:
+              // move_table_rook_bishop[6][0][1&2] move_table_rook_bishop[7][0][1&2]
+              //check where is it
+              if(j == 0) { 
+                if(atk_play[i-1][j+1] > wp)
+                  atk_play[i-1][j+1] = wp; 
+                gp[i-1][j+1]++; 
+              }
+              else if(j == 4) { 
+                if(atk_play[i-1][j-1] > wp)
+                  atk_play[i-1][j-1] = wp; 
+                gp[i-1][j-1]++; 
+              }
+              else { 
+                atk_play[i-1][j+1] = wp; gp[i-1][j+1]++; 
+                atk_play[i-1][j-1] = wp; gp[i-1][j-1]++;
+              }
+              break;
+            case 2:
+              //move_table_rook_bishop[4,5,6,7][all][1&2]
+              for(int k=4;k<=7;k++){
+                
+              }
+              break;
+            case 4:
+              //move_table_rook_bishop[0,1,2,3][all][1&2]
+              break;
+            case 5:
+              //move_table_rook_bishop all
+              break;
+            case 3:
+              //move_table_knight
+              break;
+            case 6:
+              //move_table_king
+              break;
+            default:
+              break;
+          }
+        }
+        //black
+        else {
+          int bp = board.board[this->player][i][j];
+          score += point_table[bp];
+          switch (bp)
+          {
+            case 1:
+              // move_table_rook_bishop[6][0][1&2] move_table_rook_bishop[7][0][1&2]
+              if(j == 0) { 
+                if(atk_play[i+1][j+1] > bp)
+                  atk_play[i+1][j+1] = bp; 
+                gp[i+1][j+1]++; 
+              }
+              else if(j == 4) { 
+                if(atk_play[i+1][j-1] > bp)
+                  atk_play[i+1][j-1] = bp; 
+                gp[i+1][j-1]++; 
+              }
+              else { 
+                atk_play[i+1][j+1] = bp; gp[i+1][j+1]++; 
+                atk_play[i+1][j-1] = bp; gp[i+1][j-1]++;
+              }
+              break;
+            case 2:
+              //move_table_rook_bishop[4,5,6,7][all][1&2]
+              break;
+            case 4:
+              //move_table_rook_bishop[0,1,2,3][all][1&2]
+              break;
+            case 5:
+              //move_table_rook_bishop all
+              break;
+            case 3:
+              //move_table_knight
+              break;
+            case 6:
+              //move_table_king
+              break;
+            default:
+              break;
+          }
+        }
       }
+      if(board.board[1-this->player][i][j]){
+        //white
+        if(!(1-this->player)){
+          int wp = board.board[1-this->player][i][j];
+          score -= point_table[wp];
+          switch (wp)
+          {
+            case 1:
+              // move_table_rook_bishop[6][0][1&2] move_table_rook_bishop[7][0][1&2]
+              if(j == 0) { 
+                if(atk_opt[i-1][j+1] > wp)
+                  atk_opt[i-1][j+1] = wp; 
+                go[i-1][j+1]++; 
+              }
+              else if(j == 4) { 
+                if(atk_opt[i-1][j-1] > wp)
+                  atk_opt[i-1][j-1] = wp; 
+                go[i-1][j-1]++; 
+              }
+              else { 
+                atk_opt[i-1][j+1] = wp; go[i-1][j+1]++; 
+                atk_opt[i-1][j-1] = wp; go[i-1][j-1]++;
+              }
+              break;
+            case 2:
+              //move_table_rook_bishop[4,5,6,7][all][1&2]
+              break;
+            case 4:
+              //move_table_rook_bishop[0,1,2,3][all][1&2]
+              break;
+            case 5:
+              //move_table_rook_bishop all
+              break;
+            case 3:
+              //move_table_knight
+              break;
+            case 6:
+              //move_table_king
+              break;
+            default:
+              break;
+          }
+        }
+        //black
+        else {
+          int bp = board.board[1-this->player][i][j];
+          score -= point_table[bp];
+          switch (bp)
+          {
+            case 1:
+              // move_table_rook_bishop[6][0][1&2] move_table_rook_bishop[7][0][1&2]
+              if(j == 0) { 
+                if(atk_opt[i+1][j+1] > bp)
+                  atk_opt[i+1][j+1] = bp; 
+                go[i+1][j+1]++; 
+              }
+              else if(j == 4) { 
+                if(atk_opt[i+1][j-1] > bp)
+                  atk_opt[i+1][j-1] = bp; 
+                go[i+1][j-1]++; 
+              }
+              else { 
+                atk_opt[i+1][j+1] = bp; go[i+1][j+1]++; 
+                atk_opt[i+1][j-1] = bp; go[i+1][j-1]++;
+              }
+              break;
+            case 2:
+              //move_table_rook_bishop[4,5,6,7][all][1&2]
+              break;
+            case 4:
+              //move_table_rook_bishop[0,1,2,3][all][1&2]
+              break;
+            case 5:
+              //move_table_rook_bishop all
+              break;
+            case 3:
+              //move_table_knight
+              break;
+            case 6:
+              //move_table_king
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    }
   }
-  return point;
+
+  //compare atk_play atk_opt gp go
+  return score;
 }
 /**
  * @brief return next state after the move
@@ -50,6 +368,7 @@ State* State::next_state(Move move){
   }
   if(next.board[1-this->player][to.first][to.second]){
     next.board[1-this->player][to.first][to.second] = 0;
+
   }
   
   next.board[this->player][from.first][from.second] = 0;
@@ -223,7 +542,6 @@ void State::get_legal_actions(){
       }
     }
   }
-  std::cout << "\n";
   this->legal_actions = all_actions;
 }
 

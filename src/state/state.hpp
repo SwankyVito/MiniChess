@@ -47,7 +47,10 @@ class State{
     GameState game_state = UNKNOWN;
     Board board;
     int player = 0;
+    // white 0 black 1
     std::vector<Move> legal_actions;
+    
+    //extra
     std::vector<State> legal_states;
     std::map<std::pair<int,State>,std::vector<State>> tree;
 
@@ -57,10 +60,14 @@ class State{
     State(Board board, int player): board(board), player(player){};
     
     int evaluate();
+    int evaluate2();
     
     State* next_state(Move move);
     void get_legal_actions();
+    //extra
     void get_legal_State();
+    
+    //encode
     std::string encode_output();
     std::string encode_state();
 };
