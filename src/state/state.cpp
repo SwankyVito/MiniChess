@@ -11,8 +11,8 @@
  * 
  * @return int 
  */
-const int MAX = 1028;
-const int MIN = -1028;
+const int MAX = 40;
+const int MIN = -40;
 
 
 
@@ -25,7 +25,7 @@ int State::evaluate2(){
   if(this->game_state == DRAW)
     return 0;
 
-  int point_table[7] = { 0, 1, 5, 3, 3, 20, 100};
+  int point_table[7] = { 0, 1, 5, 3, 3, 9, 0};
   
   //kinght move table
   int move_x[8] = {1,1,-1,-1,2,2,-2,-2};
@@ -651,10 +651,11 @@ int State::evaluate2(){
               for(int k=0;k<8;k++){
                 int i_ = i + move_y[k];
                 int j_ = j + move_x[k];
-                if(i_>=0 && i_<=5 && j_ >=0 && j_<=4){
-                  atk_opt[i_][j_] = std::min(atk_play[i_][j_],bp);
-                  go[i_][j_]++;
-                }
+                if(i_>=0 && i_<=5 && j_>=0 && j_<=4){
+                    if(atk_opt[i_][j_] > bp)
+                      atk_opt[i_][j_] = bp;
+                    go[i_][j_]++; 
+                }    
               }
               break;
             case 6:
@@ -702,9 +703,11 @@ int State::evaluate2(){
   //king safty
   for(int i=0; i<BOARD_H; i++){
     for(int j=0; j<BOARD_W; j++){
-      if(board.board[this->player][i][j] == 6 && atk_opt[i][j]!=0){
-        //score = MIN;
-        return MIN;
+      if(board.board[this->player][i][j] == 6 && atk_opt[i][j] == 0){
+        score += 20;
+      }
+      else if(board.board[this->player][i][j] == 6 && atk_opt[i][j] != 0){
+        score -= 20;
       }
       else if(board.board[this->player][i][j] == 6){
         if(i == 5 && this->player == 0) score+=10;

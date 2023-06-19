@@ -25,18 +25,18 @@ Move Random2::get_move(State *state){
     minimax *cal = new minimax();
     int tmp = cal->do_minimax(next,1,true,MIN,MAX);
     if(!flag) { select = move; flag = 1;}
-    if( tmp >= point){
+    if( tmp > point){
       select = move;
       point = tmp;
     }
-    /*
+    
     if(tmp == point){
       if(rand()%2){
         select = move;
         point = tmp;
       }
     }
-    */    
+       
   }
 
   //temporary selections

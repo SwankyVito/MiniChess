@@ -2,13 +2,13 @@
 #define __MINIMAX_H__
 #include "../state/state.hpp"
 
-const int MAX = 1028;
-const int MIN = -1028;
+const int MAX = 40;
+const int MIN = -40;
 class minimax{
     public:
     minimax(){}
     int do_minimax(State *state, int depth, bool maxplayer, int alpha, int beta){
-        if(depth == 5 || state->game_state == WIN){
+        if(depth == 6 || state->game_state == WIN){
             return state->evaluate2();
         }
         if(maxplayer){
