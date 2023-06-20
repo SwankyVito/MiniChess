@@ -26,18 +26,10 @@ Move Random2::get_move(State *state ,int depth){
     alphabeta *cal = new alphabeta();
     int tmp = cal->do_alphabeta(next,depth,true,MIN,MAX);
     if(!flag) { select = move; flag = 1;}
-    if( tmp > point){
+    if( tmp >= point){
       select = move;
       point = tmp;
     }
-    /*
-    if(tmp == point){
-      if(rand()%2){
-        select = move;
-        point = tmp;
-      }
-    }
-    */ 
   }
 
   //temporary selections

@@ -3,7 +3,7 @@
 
 #include "../config.hpp"
 #include "../state/state.hpp"
-#include "../policy/alphabeta.hpp"
+#include "../policy/minimax.hpp"
 
 
 State* root;
@@ -44,7 +44,7 @@ void write_valid_spot(std::ofstream& fout) {
   // Keep updating the output until getting killed.
   while(true) {
     // Choose a random spot.
-    auto move = Random2::get_move(root,6);
+    auto move = Random3::get_move(root,4);
     fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
     
