@@ -49,7 +49,7 @@ void write_valid_spot(std::ofstream& fout) {
     auto move = submit::get_move(root,depth);
     fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
-    depth += 1;
+    depth += 2;
     // Remember to flush the output to ensure the last action is written to file.
     fout.flush();
     break;
