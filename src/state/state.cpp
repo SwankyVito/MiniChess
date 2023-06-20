@@ -42,15 +42,150 @@ int State::evaluate() {
     int score = 0;
     for (int i = 0; i < BOARD_H; i ++) {
         for (int j = 0; j < BOARD_W; j ++) {
-            int now = this->board.board[1-this->player][i][j]; 
-            if (now)  score += point_table[now];
-            //對手被攻擊 +1000
-
-
-            now = this->board.board[this->player][i][j]; 
+            int  now = this->board.board[this->player][i][j];
+            bool under_attack = false; 
             if (now) score -= point_table[now];
-            //自己被攻擊 -1000
+            
+            //自己被攻擊 -1000 且對手未被攻擊
+            if(now == 6){
+              for(int mode = 1;mode<=6;mode++){
+                switch (mode){
+                    case 1: //pawn
+                      //white
+                      if(this->player){
+                        int i_ = i-1; int j_ =j-1;
+                        if(i_<=BOARD_H && i_>=0 && j_<=BOARD_W && j_>=0)
+                          if(this->board.board[1-this->player][i_][j_]){
+                            score -= point_table[6];
+                            under_attack = !under_attack; 
+                          }
+                        i_ = i-1; j_=j+1;
+                        if(i_<=BOARD_H && i_>=0 && j_<=BOARD_W && j_>=0)
+                          if(this->board.board[1-this->player][i_][j_]){
+                            score += point_table[6];
+                            under_attack = !under_attack; 
+                          }
+                      }
+                      //black
+                      else{
+                        int i_ = i+1; int j_ =j+1;
+                        if(i_<=BOARD_H && i_>=0 && j_<=BOARD_W && j_>=0)
+                          if(this->board.board[1-this->player][i_][j_] == 1){
+                            score -= point_table[6];
+                            under_attack = !under_attack; 
+                          }
+                        i_ = i+1; j_=j-1;
+                        if(i_<=BOARD_H && i_>=0 && j_<=BOARD_W && j_>=0)
+                          if(this->board.board[1-this->player][i_][j_] == 1){
+                            score -= point_table[6];
+                            under_attack = !under_attack; 
+                          }
+                      }
+                      break;                    
+                    case 2: //rook
+                    case 4: //bishop
+                    case 5: //queen
+                      int st, end;
+                      switch (mode){
+                        case 2: st=0; end=4; break; //rook
+                        case 4: st=4; end=8; break; //bishop
+                        case 5: st=0; end=8; break; //queen
+                        default: st=0; end=-1;
+                      }
+                      for(int part=st; part<end; part+=1){
+                        auto move_list = move_table_rook_bishop[part];
+                        for(int k=0; k<std::max(BOARD_H, BOARD_W); k+=1){
+                          int p[2] = {move_list[k][0] + i, move_list[k][1] + j};
+                          if(p[0]>=BOARD_H || p[0]<0 || p[1]>=BOARD_W || p[1]<0) break;
+                          if(this->board.board[1-this->player][p[0]][p[1]] == 2){
+                            score -= point_table[6];                        
+                            under_attack = !under_attack; 
+                          }
+                        }
+                      }
+                      break;
+                    
+                    case 3: //knight
+                      for(auto move: move_table_knight){
+                        int x = move[0] + i;
+                        int y = move[1] + j;
+                        if(x>=BOARD_H || x<0 || y>=BOARD_W || y<0) continue;
+                        if(this->board.board[1-this->player][x][y] == 3){
+                          score -= point_table[6]; 
+                          under_attack = !under_attack; 
+                        }
+                      }
+                      break;
+                }
+              }
+            }
+            
 
+            now = this->board.board[1-this->player][i][j]; 
+            if (now)  score += point_table[now];
+            if(!under_attack){
+              if(now == 6){
+              for(int mode = 1;mode<=6;mode++){
+                switch (mode){
+                    case 1: //pawn
+                      //white
+                      if(1-this->player){
+                        int i_ = i-1; int j_ =j-1;
+                        if(i_<=BOARD_H && i_>=0 && j_<=BOARD_W && j_>=0)
+                          if(this->board.board[this->player][i_][j_])
+                            score += point_table[6];
+                        i_ = i-1; j_=j+1;
+                        if(i_<=BOARD_H && i_>=0 && j_<=BOARD_W && j_>=0)
+                          if(this->board.board[this->player][i_][j_])
+                            score += point_table[6];
+                      }
+                      //black
+                      else{
+                        int i_ = i+1; int j_ =j+1;
+                        if(i_<=BOARD_H && i_>=0 && j_<=BOARD_W && j_>=0)
+                          if(this->board.board[this->player][i_][j_] == 1)
+                            score += point_table[6];
+                        i_ = i+1; j_=j-1;
+                        if(i_<=BOARD_H && i_>=0 && j_<=BOARD_W && j_>=0)
+                          if(this->board.board[this->player][i_][j_] == 1)
+                            score += point_table[6];
+                      }
+                      break;                    
+                    case 2: //rook
+                    case 4: //bishop
+                    case 5: //queen
+                      int st, end;
+                      switch (mode){
+                        case 2: st=0; end=4; break; //rook
+                        case 4: st=4; end=8; break; //bishop
+                        case 5: st=0; end=8; break; //queen
+                        default: st=0; end=-1;
+                      }
+                      for(int part=st; part<end; part+=1){
+                        auto move_list = move_table_rook_bishop[part];
+                        for(int k=0; k<std::max(BOARD_H, BOARD_W); k+=1){
+                          int p[2] = {move_list[k][0] + i, move_list[k][1] + j};
+                          if(p[0]>=BOARD_H || p[0]<0 || p[1]>=BOARD_W || p[1]<0) break;
+                          if(this->board.board[this->player][p[0]][p[1]] == 2)
+                            score += point_table[6];                        
+                        }
+                      }
+                      break;
+                    
+                    case 3: //knight
+                      for(auto move: move_table_knight){
+                        int x = move[0] + i;
+                        int y = move[1] + j;
+                        if(x>=BOARD_H || x<0 || y>=BOARD_W || y<0) continue;
+                        if(this->board.board[this->player][x][y] == 3)
+                            score += point_table[6]; 
+                      }
+                      break;
+                  }
+                }
+              }
+            }
+            //對手被攻擊 +1000
         }
     }
     return score;
