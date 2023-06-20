@@ -24,7 +24,7 @@ Move Random2::get_move(State *state ,int depth){
   for(auto move : state->legal_actions){
     State *next = state->next_state(move);
     alphabeta *cal = new alphabeta();
-    int tmp = cal->do_alphabeta(next,depth,false,MIN,MAX);
+    int tmp = cal->do_alphabeta(next,depth,true,MIN,MAX);
     if(!flag) { select = move; flag = 1;}
     if( tmp >= point){
       select = move;
