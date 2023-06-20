@@ -23,9 +23,9 @@ Move submit::get_move(State *state ,int depth){
   for(auto move : state->legal_actions){
     State *next = state->next_state(move);
     alphabeta *cal = new alphabeta();
-    int tmp = cal->do_alphabeta(next,depth,true,MIN,MAX);
+    int tmp = cal->do_alphabeta(next,depth,false,MIN,MAX);
     if(!flag) { select = move; flag = 1;}
-    if( tmp > point){
+    if( tmp >= point){
       select = move;
       point = tmp;
     }
